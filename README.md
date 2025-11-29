@@ -49,7 +49,7 @@ This project serves as a **comprehensive reference implementation** for masterin
 
 ## 📊 Architecture Diagram
 
-![AuthFlow Architecture](docs/images/architecture.png?v=2)
+![AuthFlow Architecture](docs/images/architecture.png?v=3)
 
 ### Detailed Component Flow
 
