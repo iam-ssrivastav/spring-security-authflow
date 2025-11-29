@@ -24,6 +24,8 @@ A production-ready Spring Boot application demonstrating comprehensive authentic
 - ✅ **Caching** - 4 types: Spring Cache, LRU, LFU, TTL
 - ✅ **Rate Limiting** - Fixed window algorithm (10 req/min)
 - ✅ **File Upload** - Profile pictures & document attachments
+- ✅ **Database Migration** - Flyway for version control
+- ✅ **Pagination & Sorting** - Scalable list endpoints
 - ✅ **Admin Operations** - User management, account control
 - ✅ **Swagger UI** - Interactive API documentation
 - ✅ **Comprehensive Documentation** - 100+ interview Q&A

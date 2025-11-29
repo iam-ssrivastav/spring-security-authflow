@@ -57,16 +57,7 @@ public class DemoController {
                 "authentication", "Not required"));
     }
 
-    /**
-     * Admin-only endpoint - requires ADMIN role.
-     */
-    @GetMapping("/admin/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Map<String, String>> adminUsers() {
-        return ResponseEntity.ok(Map.of(
-                "message", "Admin endpoint - RBAC protected",
-                "access", "ROLE_ADMIN required"));
-    }
+    // Removed conflicting /admin/users endpoint (moved to AdminUserController)
 
     /**
      * Manager or Admin endpoint - requires MANAGER or ADMIN role.

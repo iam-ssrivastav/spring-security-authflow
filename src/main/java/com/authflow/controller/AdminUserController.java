@@ -14,6 +14,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -39,6 +44,25 @@ public class AdminUserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    @GetMapping
+    @Operation(summary = "List Users", description = "List all users with pagination")
+    public ResponseEntity<Page<Map<String, Object>>> listUsers(
+            @Parameter(description = "Page number (0-based)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size", example = "10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Sort field (id, username, email)", example = "id") @RequestParam(defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction (asc, desc)", example = "asc") @RequestParam(defaultValue = "asc") String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<User> users = userRepository.findAll(pageable);
+
+        Page<Map<String, Object>> result = users.map(this::toDetailedMap);
+
+        return ResponseEntity.ok(result);
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get User Details", description = "Get detailed information about a user")
