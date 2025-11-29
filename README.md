@@ -106,6 +106,7 @@ graph TB
         AC[Role Repository]
         AD[Document Repository]
         AE[FileMetadata Repository]
+        AH[Flyway Migration]
     end
 
     subgraph "External Services"
@@ -148,6 +149,8 @@ graph TB
     M --> AC
     I --> AD
     K --> AE
+    
+    AH --> AA
 
     AB --> AA
     AC --> AA
@@ -160,6 +163,7 @@ graph TB
     style M fill:#4ecdc4
     style AA fill:#95e1d3
     style W fill:#f38181
+    style AH fill:#ffe66d
 ```
 
 ## 🔄 Sequence Diagrams
