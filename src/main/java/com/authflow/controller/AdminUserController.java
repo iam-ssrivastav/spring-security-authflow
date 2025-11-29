@@ -45,6 +45,43 @@ public class AdminUserController {
     private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    /**
+     * List all users with pagination and sorting.
+     * 
+     * <h2>Pagination & Sorting Logic:</h2>
+     * <p>
+     * This endpoint demonstrates how to expose a paginated resource to clients.
+     * It uses {@link PageRequest} to encapsulate pagination information.
+     * </p>
+     * 
+     * <h3>Why use Pagination?</h3>
+     * <ul>
+     * <li><b>Performance:</b> Reduces database load by fetching only necessary
+     * rows.</li>
+     * <li><b>Scalability:</b> Handles large datasets gracefully.</li>
+     * <li><b>Network Efficiency:</b> Reduces payload size sent over the
+     * network.</li>
+     * </ul>
+     * 
+     * <h3>Code Explanation:</h3>
+     * 
+     * <pre>
+     * // 1. Create Sort object
+     * Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+     * 
+     * // 2. Create Pageable object
+     * Pageable pageable = PageRequest.of(page, size, sort);
+     * 
+     * // 3. Fetch Page from Repository
+     * Page&lt;User&gt; users = userRepository.findAll(pageable);
+     * </pre>
+     * 
+     * @param page    Zero-based page index.
+     * @param size    Page size.
+     * @param sortBy  Field to sort by.
+     * @param sortDir Sort direction.
+     * @return A Page of user details.
+     */
     @GetMapping
     @Operation(summary = "List Users", description = "List all users with pagination")
     public ResponseEntity<Page<Map<String, Object>>> listUsers(

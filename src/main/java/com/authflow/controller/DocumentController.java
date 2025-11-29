@@ -75,6 +75,47 @@ public class DocumentController {
                                 .body(toMap(document));
         }
 
+        /**
+         * List all documents accessible to the current user with pagination and
+         * sorting.
+         * 
+         * <h2>Pagination & Sorting Logic:</h2>
+         * <p>
+         * This endpoint utilizes Spring Data's {@link Pageable} interface to
+         * efficiently retrieve
+         * data in chunks. This prevents loading the entire dataset into memory.
+         * </p>
+         * 
+         * <h3>Parameters:</h3>
+         * <ul>
+         * <li><b>page:</b> Zero-based page index (default: 0).</li>
+         * <li><b>size:</b> The size of the page to be returned (default: 10).</li>
+         * <li><b>sortBy:</b> The property to sort by (e.g., "id", "title",
+         * "createdAt").</li>
+         * <li><b>sortDir:</b> The sort direction ("asc" or "desc").</li>
+         * </ul>
+         * 
+         * <h3>Implementation Details:</h3>
+         * <ol>
+         * <li><b>Sort Creation:</b> A {@link Sort} object is created based on the
+         * `sortBy` and `sortDir` parameters.</li>
+         * <li><b>PageRequest:</b> A {@link PageRequest} (implementation of Pageable) is
+         * constructed using page, size, and sort.</li>
+         * <li><b>Repository Call:</b> The repository method `findByOwnerOrVisibility`
+         * is called with the Pageable object.
+         * Spring Data JPA automatically applies the LIMIT, OFFSET, and ORDER BY clauses
+         * to the SQL query.</li>
+         * <li><b>Response:</b> A {@link Page} object is returned, containing the
+         * content and metadata (totalPages, totalElements, etc.).</li>
+         * </ol>
+         * 
+         * @param userDetails The authenticated user.
+         * @param page        Page number (0-based).
+         * @param size        Page size.
+         * @param sortBy      Field to sort by.
+         * @param sortDir     Sort direction (asc/desc).
+         * @return A Page of document maps.
+         */
         @GetMapping
         @Operation(summary = "List Documents", description = "List all documents accessible to current user with pagination")
         public ResponseEntity<Page<Map<String, Object>>> listDocuments(

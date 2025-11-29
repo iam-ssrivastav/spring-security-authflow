@@ -114,7 +114,7 @@ INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
 INSERT INTO permissions (name) VALUES ('READ_DOCUMENT');
 INSERT INTO permissions (name) VALUES ('WRITE_DOCUMENT');
 INSERT INTO permissions (name) VALUES ('DELETE_DOCUMENT');
-INSERT INTO permissions (name) VALUES ('MANAGE_USERS');
+INSERT INTO permissions (name) VALUES ('EXECUTE_ADMIN_TASKS');
 
 -- Initial Data: Role Permissions
 -- USER gets READ_DOCUMENT, WRITE_DOCUMENT
@@ -130,24 +130,21 @@ INSERT INTO role_permissions (role_id, permission_id)
 SELECT r.id, p.id FROM roles r, permissions p WHERE r.name = 'ROLE_ADMIN';
 
 -- Initial Data: Demo Users (password is 'password123' encoded with BCrypt)
--- User: user
-INSERT INTO users (username, email, password, created_at) 
-VALUES ('user', 'user@example.com', '$2a$10$xn3LI/AjqicFYZFruO4.uoVW8.k8.u.2.k.1.1.1.1.1.1.1.1.1', CURRENT_TIMESTAMP);
+INSERT INTO users (username, email, password, enabled, account_non_expired, account_non_locked, credentials_non_expired, mfa_enabled, created_at)
+VALUES ('user', 'user@example.com', '$2a$12$4.2LgKsAJ.LvyesDpdakAe.d6iFCFi0QFtItz1yp0rvcQWPf8WSxW', TRUE, TRUE, TRUE, TRUE, FALSE, CURRENT_TIMESTAMP);
 
--- User: manager
-INSERT INTO users (username, email, password, created_at) 
-VALUES ('manager', 'manager@example.com', '$2a$10$xn3LI/AjqicFYZFruO4.uoVW8.k8.u.2.k.1.1.1.1.1.1.1.1.1', CURRENT_TIMESTAMP);
+INSERT INTO users (username, email, password, enabled, account_non_expired, account_non_locked, credentials_non_expired, mfa_enabled, created_at)
+VALUES ('manager', 'manager@example.com', '$2a$12$4.2LgKsAJ.LvyesDpdakAe.d6iFCFi0QFtItz1yp0rvcQWPf8WSxW', TRUE, TRUE, TRUE, TRUE, FALSE, CURRENT_TIMESTAMP);
 
--- User: admin
-INSERT INTO users (username, email, password, created_at) 
-VALUES ('admin', 'admin@example.com', '$2a$10$xn3LI/AjqicFYZFruO4.uoVW8.k8.u.2.k.1.1.1.1.1.1.1.1.1', CURRENT_TIMESTAMP);
+INSERT INTO users (username, email, password, enabled, account_non_expired, account_non_locked, credentials_non_expired, mfa_enabled, created_at)
+VALUES ('admin', 'admin@example.com', '$2a$12$4.2LgKsAJ.LvyesDpdakAe.d6iFCFi0QFtItz1yp0rvcQWPf8WSxW', TRUE, TRUE, TRUE, TRUE, FALSE, CURRENT_TIMESTAMP);
 
--- Assign Roles
-INSERT INTO user_roles (user_id, role_id) 
+-- Assign Roles to Users
+INSERT INTO user_roles (user_id, role_id)
 SELECT u.id, r.id FROM users u, roles r WHERE u.username = 'user' AND r.name = 'ROLE_USER';
 
-INSERT INTO user_roles (user_id, role_id) 
+INSERT INTO user_roles (user_id, role_id)
 SELECT u.id, r.id FROM users u, roles r WHERE u.username = 'manager' AND r.name = 'ROLE_MANAGER';
 
-INSERT INTO user_roles (user_id, role_id) 
+INSERT INTO user_roles (user_id, role_id)
 SELECT u.id, r.id FROM users u, roles r WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN';
