@@ -140,6 +140,59 @@ graph TB
     style W fill:#f38181
 ```
 
+## 🔄 Sequence Diagrams
+
+### Login & Token Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant AuthController
+    participant AuthService
+    participant AuthenticationManager
+    participant JwtService
+    participant Database
+
+    Client->>AuthController: POST /login (username, password)
+    AuthController->>AuthService: authenticate(request)
+    AuthService->>AuthenticationManager: authenticate(token)
+    AuthenticationManager->>Database: loadUserByUsername()
+    Database-->>AuthenticationManager: UserDetails
+    AuthenticationManager-->>AuthService: Authentication
+    AuthService->>JwtService: generateAccessToken(user)
+    JwtService-->>AuthService: accessToken
+    AuthService->>JwtService: generateRefreshToken(user)
+    JwtService-->>AuthService: refreshToken
+    AuthService-->>AuthController: AuthResponse
+    AuthController-->>Client: 200 OK (tokens)
+```
+
+### MFA Verification Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant MfaController
+    participant MfaService
+    participant GoogleAuthenticator
+    participant Database
+
+    Client->>MfaController: POST /mfa/verify (code)
+    MfaController->>MfaService: verifyCode(user, code)
+    MfaService->>Database: getMfaSecret(user)
+    Database-->>MfaService: secret
+    MfaService->>GoogleAuthenticator: authorize(secret, code)
+    GoogleAuthenticator-->>MfaService: boolean result
+    alt is valid
+        MfaService->>Database: setMfaEnabled(true)
+        MfaService-->>MfaController: success
+        MfaController-->>Client: 200 OK (MFA Enabled)
+    else is invalid
+        MfaService-->>MfaController: exception
+        MfaController-->>Client: 400 Bad Request
+    end
+```
+
 ---
 
 ## 🚀 Quick Start
