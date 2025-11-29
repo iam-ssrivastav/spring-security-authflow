@@ -32,6 +32,11 @@ A production-ready Spring Boot application demonstrating comprehensive authentic
 
 ## 📊 Architecture Diagram
 
+![AuthFlow Architecture](docs/images/architecture.png)
+
+### Detailed Component Flow
+
+
 ```mermaid
 graph TB
     subgraph "Client Layer"
